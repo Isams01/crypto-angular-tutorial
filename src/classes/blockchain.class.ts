@@ -35,7 +35,7 @@ export class Blockchain {
     return promise;
   }
 
-  getAddressBalanec(address: string) {
+  getAddressBalance(address: string) {
     let balance = 0;
     for (const block of this.chain) {
       for (const transaction of block.transactions) {
