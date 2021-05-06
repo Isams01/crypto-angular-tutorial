@@ -28,7 +28,7 @@ export class Block{
         this.hash = this.calculateHash();
       }
       console.log("Block successfully hashed (" + this.nonce + " iterations) Hash: " + this.hash);
-      resolve(promise);
+      resolve(this.hash);
     });
     return promise;
   }
