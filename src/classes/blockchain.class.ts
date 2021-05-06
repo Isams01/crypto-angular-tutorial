@@ -6,9 +6,22 @@ export class Blockchain {
   chain: Block[] = [];
   difficulty: number = 3;
   miningReward: number = 50;
+  registeredAddresses: string[] = [];
+
 
   constructor() {
     this.createGenesisBlock();
+    this.registeredAddresses = ['wallet-Alice', 'wallet-Bob', 'wallet-Charlie', 'wallet-Miner49r'];
+    this.airdropCoins( 100 );
+  }
+
+  airdropCoins( coins: number ) {
+    let airdropTransactions: Transaction[] = [];
+    for (const addr of this.registeredAddresses) {
+      let transaction = new Transaction( Date.now(), "mint", addr, coins);
+      airdropTransactions.push( transaction );
+    }
+    this.mineCurrentBlock('wallet-Miner49r',airdropTransactions);
   }
 
   createGenesisBlock(){
@@ -33,6 +46,10 @@ export class Blockchain {
         });
     });
     return promise;
+  }
+
+  validateTransaction() {
+
   }
 
   getAddressBalance(address: string) {
