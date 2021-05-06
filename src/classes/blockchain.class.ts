@@ -3,16 +3,18 @@ import { Block } from './block.class';
 import { Transaction } from './transaction.class';
 
 export class Blockchain {
-  chain: Block[];
+  chain: Block[] = [];
   difficulty: number = 3;
   miningReward: number = 50;
 
   constructor() {
-    this.chain = [ this.createGenesisBlock() ];
+    this.createGenesisBlock();
   }
 
   createGenesisBlock(){
-    return new Block("05/02/2021", "Genesis Block", "0")
+    let txn = new Transaction( Date.now(), "mint", "genesis", 0);
+    let block = new Block( Date.now(), [ txn ], "0");
+    this.chain.push( block );
   }
 
   getLatestBlock() {
@@ -31,6 +33,21 @@ export class Blockchain {
         });
     });
     return promise;
+  }
+
+  getAddressBalanec(address: string) {
+    let balance = 0;
+    for (const block of this.chain) {
+      for (const transaction of block.transactions) {
+        if (transaction.payerAddress === address) {
+          balance -= transaction.amount;
+        }
+        if (transaction.payeeAddress === address) {
+          balance += transaction.amount;
+        }
+      }
+    }
+    return balance;
   }
 
   isChainValid() {
