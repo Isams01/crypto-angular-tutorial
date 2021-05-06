@@ -35,9 +35,17 @@ export class Blockchain {
   }
 
   mineCurrentBlock( minerAddress: string, transactions: Transaction[]): Promise<any> {
-    transactions.push( new Transaction(Date.now(), "mint", minerAddress, this.miningReward))
+    let validatedTransactions: Transaction[] = [];
+    for (const transaction of transactions) {
+      if ( transaction.payerAddress === "mint" || this.validateTransaction( transaction ) ) {
+        validatedTransactions.push( transaction );
+      }
+    }
+    console.log("Validated Transactions: ", validatedTransactions.length);
+
+    validatedTransactions.push( new Transaction(Date.now(), "mint", minerAddress, this.miningReward))
     let promise = new Promise( (resolve, reject) => {
-      let block = new Block(Date.now(), transactions, this.getLatestBlock().hash);
+      let block = new Block(Date.now(),validatedTransactions, this.getLatestBlock().hash);
       block.mineBlock( this.difficulty )
         .then(() => {
           console.log('current block successfully mined...');
@@ -48,8 +56,14 @@ export class Blockchain {
     return promise;
   }
 
-  validateTransaction() {
-
+  validateTransaction( transaction: any ) {
+    let payerAddress = transaction.payerAddress;
+    let balance = this.getAddressBalance( payerAddress );
+    if ( balance >= transaction.amount ) {
+      return true
+    } else {
+      return false;
+    }
   }
 
   getAddressBalance(address: string) {
