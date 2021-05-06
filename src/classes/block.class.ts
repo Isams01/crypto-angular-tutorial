@@ -1,24 +1,23 @@
 import { withModule } from '@angular/core/testing';
 import * as SHA256 from 'crypto-js/sha256';
+import { Transaction } from './transaction.class';
 
 export class Block{
-  index: number;
   timestamp: any;
-  data: any;
+  transactions: Transaction[] = [];
   previousHash: string = '';
   hash: string = '';
   nonce: number = 0;
 
-  constructor(index: number, timestamp: any, data: any, previousHash: string) {
-    this.index = index;
+  constructor(timestamp: any, transactions: any, previousHash: string) {
     this.timestamp = timestamp;
-    this.data = data;
+    this.transactions = transactions;
     this.previousHash = previousHash;
     this.hash = this.calculateHash();
   }
 
   calculateHash(){
-    return SHA256( this.index + this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
+    return SHA256( this.previousHash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).toString();
   }
 
   mineBlock( difficulty: any ): Promise<any> {
