@@ -4,7 +4,8 @@ import { CryptoService } from './services/crypto.service'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MyMaterialModule } from './modules/my-material/my-material.module'
+import { MyMaterialModule } from './modules/my-material/my-material.module';
+import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { MyMaterialModule } from './modules/my-material/my-material.module'
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    MyMaterialModule
+    MyMaterialModule,
+    ReactiveFormsModule
   ],
   providers: [CryptoService],
   bootstrap: [AppComponent]
