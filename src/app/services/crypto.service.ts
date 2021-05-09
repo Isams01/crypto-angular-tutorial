@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Blockchain } from '../../classes/blockchain.class';
 import { Block } from '../../classes/block.class';
 import { Transaction } from '../../classes/transaction.class'
+import {} from "../../classes/auto-activity.class"
 
 
 @Injectable()
