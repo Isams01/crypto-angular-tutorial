@@ -98,4 +98,9 @@ export class Blockchain {
     // no discrepancies
     return true;
   }
+
+  receiveTransaction(transaction: Transaction) {
+    console.log("Transaction received by blockchain, Amount: ", transaction.amount);
+    this.mineCurrentBlock( 'wallet-Miner49r', [transaction]);
+  }
 }
