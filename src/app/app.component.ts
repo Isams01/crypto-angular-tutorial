@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { CryptoService } from './services/crypto.service';
 import { Validators, FormGroup, FormBuilder} from "@angular/forms"
+import { Wallet } from '../classes/wallet.class'
+import { Blockchain } from 'src/classes/blockchain.class';
+import { Transaction } from '../classes/transaction.class';
 
 @Component({
   selector: 'app-root',
@@ -10,19 +13,43 @@ import { Validators, FormGroup, FormBuilder} from "@angular/forms"
 export class AppComponent {
 
   walletAddressForm: FormGroup;
+  sendCoinsForm: FormGroup;
 
-  blockchain = '';
+  blockchain: Blockchain;
   balance: number = 0;
+  wallet: Wallet;
   // cryptoSvc = new CryptoService()
 
   constructor( public cryptoSvc: CryptoService, public fb: FormBuilder) {
     this.walletAddressForm = this.fb.group({
       walletAddress: ['', Validators.required]
     });
-    this.blockchain = JSON.stringify( this.cryptoSvc.cryptoChain )
+
+    this.sendCoinsForm = this.fb.group({
+      receiverAddress: ['', Validators.required],
+      transactionAmount: ['', Validators.required]
+    })
+
+    this.blockchain = this.cryptoSvc.cryptoChain;
+    this.wallet = new Wallet();
   }
 
   assignWalletAddress() {
-    console.log('Called assignWalletAddress');
+    this.wallet.assignWalletAddress( this.walletAddressForm.value.walletAddress )
+  }
+
+  getCurrentBalance() {
+    this.balance = this.blockchain.getAddressBalance( this.wallet.address );
+    console.log("balance: " + this.balance );
+  }
+
+  sendTransaction() {
+    let transaction = new Transaction(
+      Date.now(),
+      this.wallet.address,
+      this.sendCoinsForm.value.receiverAddress,
+      Number(this.sendCoinsForm.value.transactionAmount)
+    );
+    this.blockchain.receiveTransaction( transaction )
   }
 }
